@@ -22,7 +22,7 @@
 
 给定机器训练素材，令机器得到知识。
 
-<img src="/Users/LightningX/Library/Application Support/typora-user-images/截屏2020-08-19 10.53.38.png" alt="截屏2020-08-19 10.53.38" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/Note/截屏2020-08-19 10.53.38.png" alt="截屏2020-08-19 10.53.38" style="zoom:33%;" />
 
 提供给机器有标签的资料，即称为监督学习。
 
@@ -33,3 +33,4 @@
 ### 机器怎么找出想要的函数
 
 一般用Gradient Descent。
+
