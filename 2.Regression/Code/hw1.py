@@ -5,7 +5,7 @@ from dataPreprocessing import *
 import matplotlib.pyplot as plt
 
 def Problem1():
-    X, y = Produce(time_window=9, selected_row=False)
+    X, y = Produce(input_path='./Dataset/train.csv', time_window=9, selected_row=False)
     dim = 18 * 9 + 1
     x = np.concatenate((np.ones([12 * 471, 1]), X), axis=1).astype(float)
     iter_time = 5000
@@ -40,7 +40,7 @@ def Problem2():
     iter_time = 5000
     eps = 0.0000000001
     for time_window in [5, 9]:
-        X, y = Produce(time_window=time_window, selected_row=False)
+        X, y = Produce(input_path='./Dataset/train.csv', time_window=time_window, selected_row=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
         X_train_set, y_train_set, X_validation, y_validation = dataSplit(X, y)
         dim = 18 * time_window + 1
         w = np.zeros([dim, 1])
@@ -72,7 +72,7 @@ def Problem3():
     iter_time = 5000
     eps = 0.0000000001
     for selected_row in [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], [9]]:
-        X, y = Produce(time_window=9, selected_row=selected_row)
+        X, y = Produce(input_path='./Dataset/train.csv', time_window=9, selected_row=selected_row)
         X_train_set, y_train_set, X_validation, y_validation = dataSplit(X, y)
         dim = len(selected_row) * 9 + 1
         w = np.zeros([dim, 1])
@@ -101,13 +101,13 @@ def Problem3():
     plt.ylabel('Val Loss')
     plt.show()
 
-def Problem4():
+def Problem4(input_path, output_path):
     learning_rate = 10
     iter_time = 1000
     eps = 0.0000000001
     selected_row = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
     time_window = 9
-    X, y, X_square, mean_x, std_x, mean_x_square, std_x_square = Produce_square(time_window=time_window, selected_row=selected_row)
+    X, y, X_square, mean_x, std_x, mean_x_square, std_x_square = Produce_square('./Dataset/train.csv', time_window, selected_row)
     dim = len(selected_row) * time_window + 1
     w1 = np.zeros([dim, 1])
     w2 = np.zeros([dim - 1, 1])
@@ -131,11 +131,11 @@ def Problem4():
     np.save('weight2.npy', w2)
     w2 = np.load('weight2.npy')
 
-    test_x, test_x_square = Produce_square_test(time_window, selected_row, mean_x, std_x, mean_x_square, std_x_square)
+    test_x, test_x_square = Produce_square_test(input_path, time_window, selected_row, mean_x, std_x, mean_x_square, std_x_square)
     test_x = np.concatenate((np.ones([240, 1]), test_x), axis=1).astype(float)
-    ans_y = np.dot(test_x, w1) + + np.dot(test_x_square, w2)
+    ans_y = np.dot(test_x, w1) + np.dot(test_x_square, w2)
     import csv
-    with open('submit.csv', mode='w', newline='') as submit_file:
+    with open(output_path, mode='w', newline='') as submit_file:
         csv_writer = csv.writer(submit_file)
         header = ['id', 'value']
         print(header)
@@ -148,4 +148,5 @@ def Problem4():
 # Problem1()
 # Problem2()
 # Problem3()
-Problem4()
+# Problem4()
+Problem4(sys.argv[1], sys.argv[2])

@@ -2,14 +2,14 @@ import sys
 import pandas as pd
 import numpy as np
 
-def getCleanedData(train=True):
+def getCleanedData(path, train=True):
     if train:
-        data = pd.read_csv('./Dataset/train.csv', encoding='big5')
+        data = pd.read_csv(path, encoding='big5')
 
         # 数据预处理
         data_new = data.iloc[:, 3:].copy(deep=True)  # 去除日期、站点、观测项目信息
     else:
-        data = pd.read_csv('./Dataset/test.csv', header=None, encoding='big5')
+        data = pd.read_csv(path, header=None, encoding='big5')
         data_new = data.iloc[:, 2:]
 
     data_new[data_new == 'NR'] = 0  # No Record 数据置0
@@ -81,6 +81,7 @@ def Normalization(X, mean_x=[], std_x=[]):
     # 此处将mean和std传出是为了让测试数据使用训练集的分布进行归一化，否则会和模型设定不符。
     return X, mean_x, std_x
 
+# 划分训练测试集
 def dataSplit(X, y):
     import math
     X_train_set = X[: math.floor(len(X) * 0.8), :]
@@ -89,39 +90,57 @@ def dataSplit(X, y):
     y_validation = y[math.floor(len(y) * 0.8):, :]
     return X_train_set, y_train_set, X_validation, y_validation
 
-def Produce(time_window, selected_row):
-    raw_data = getCleanedData()
+# 产生数据
+def Produce(input_path, time_window, selected_row):
+    raw_data = getCleanedData(input_path)
     month_data = grouping(raw_data)
     X, y = makeDataset(month_data, time_window=time_window, selected_row=selected_row)
-    X, _, _ = Normalization(X)
-    return X, y
+    X, mean_x, std_x = Normalization(X)
+    return X, y, mean_x, std_x
 
-def Produce_square(time_window, selected_row):
-    raw_data = getCleanedData()
+# 产生含有平方项的数据
+def Produce_square(input_path, time_window, selected_row):
+    raw_data = getCleanedData(input_path)
     month_data = grouping(raw_data)
     X, y, X_square = makeDataset_square(month_data, time_window, selected_row)
     X, mean_x, std_x = Normalization(X)
     X_square, mean_x_square, std_x_square = Normalization(X_square)
     return X, y, X_square, mean_x, std_x, mean_x_square, std_x_square
 
-def makeDataset_square_test(data, time_window, selected_row):
-    X = np.empty([240, len(selected_row) * time_window], dtype=float)
-    X_square = np.empty([240, len(selected_row) * time_window], dtype=float)
+# 对测试数据进行处理
+def makeDataset_test(data, time_window, selected_row, isSquare):
     start = 9 - time_window
-    for i in range(240):
-        X[i, :] = data[18 * i:18 * (i + 1), start:9].T[:, selected_row].reshape(-1, ) # 将所有特征拼成行向量
-        X_square[i, :] = np.power(data[18 * i:18 * (i + 1), start:9].T[:, selected_row].reshape(-1, ), 2)
-    X = np.array(X)
-    X_square = np.array(X_square)
-    return X, X_square
+    X = np.empty([240, len(selected_row) * time_window], dtype=float)
+    if isSquare:
+        X_square = np.empty([240, len(selected_row) * time_window], dtype=float)
+        for i in range(240):
+            X[i, :] = data[18 * i:18 * (i + 1), start:9].T[:, selected_row].reshape(-1, )  # 将所有特征拼成行向量
+            X_square[i, :] = np.power(data[18 * i:18 * (i + 1), start:9].T[:, selected_row].reshape(-1, ), 2)
+        X = np.array(X)
+        X_square = np.array(X_square)
+        return X, X_square
+    else:
+        for i in range(240):
+            X[i, :] = data[18 * i:18 * (i + 1), start:9].T[:, selected_row].reshape(-1, )  # 将所有特征拼成行向量
+        X = np.array(X)
+        return X
 
-def Produce_square_test(time_window, selected_row, mean_x, std_x, mean_x_square, std_x_square):
-    raw_data = getCleanedData(train=False)
-    X, X_square = makeDataset_square_test(raw_data, time_window, selected_row)
+# 产生测试数据
+def Produce_test(input_path, time_window, selected_row, mean_x, std_x):
+    raw_data = getCleanedData(input_path, False)
+    X = makeDataset_test(raw_data, time_window, selected_row, False)
+    X, _, _ = Normalization(X, mean_x, std_x)
+    return X
+
+# 产生带有平方项的测试数据
+def Produce_square_test(input_path, time_window, selected_row, mean_x, std_x, mean_x_square, std_x_square):
+    raw_data = getCleanedData(input_path, False)
+    X, X_square = makeDataset_test(raw_data, time_window, selected_row, True)
     X, _, _ = Normalization(X, mean_x, std_x)
     X_square, _, _ = Normalization(X_square, mean_x_square, std_x_square)
     return X, X_square
 
+# 对含有平方项的数据进行划分
 def dataSplit_square(X, y, X_square):
     import math
     X_train_set = X[: math.floor(len(X) * 0.8), :]
