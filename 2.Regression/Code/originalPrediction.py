@@ -29,16 +29,16 @@ def Prediction(input_path, output_path):
     test_x = Produce_test(input_path, time_window, selected_row, mean_x, std_x)
     test_x = np.concatenate((np.ones([240, 1]), test_x), axis=1).astype(float)
     ans_y = np.dot(test_x, w1)
-    import csv
-    with open(output_path, mode='w', newline='') as submit_file:
-        csv_writer = csv.writer(submit_file)
-        header = ['id', 'value']
-        print(header)
-        csv_writer.writerow(header)
-        for i in range(240):
-            row = ['id_' + str(i), ans_y[i][0]]
-            csv_writer.writerow(row)
-            print(row)
+    # import csv
+    # with open(output_path, mode='w', newline='') as submit_file:
+    #     csv_writer = csv.writer(submit_file)
+    #     header = ['id', 'value']
+    #     print(header)
+    #     csv_writer.writerow(header)
+    #     for i in range(240):
+    #         row = ['id_' + str(i), ans_y[i][0]]
+    #         csv_writer.writerow(row)
+    #         print(row)
 
 
 Prediction(sys.argv[1], sys.argv[2])
