@@ -1,4 +1,4 @@
-# Regression: Case Study
+# Regression
 
 ## 回归任务示例
 
