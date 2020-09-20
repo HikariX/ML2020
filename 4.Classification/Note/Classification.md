@@ -28,7 +28,7 @@
 
 因对于数据的采样独立，因此可以将需要计算的所有样本概率进行连乘组合，得到的L就是一个似然函数。易知当该似然函数最大的时候，这个高斯分布的均值与方差就是我们所求的分布参数。以对于水系的样本预测为例，79个样本的均值与方差计算如下（通过求导方法可以得到这个最大值，此处省略，可见机器学习白板推导中关于高斯判别分析的推导介绍）：
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.37.02.png" alt="截屏2020-08-30 14.37.02" style="zoom:14%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.37.02.png" alt="截屏2020-08-30 14.37.02" style="zoom:20%;" />
 
 同样的方法可以对普通系神奇宝贝做一个计算，最终对于两个不同的类，得到两组不同的$\mu$与$\Sigma$。利用刚才提到的后验概率公式，对于一个输入向量$x$，能够计算出其属于不同类的概率（二分类里头以0.5作为分类界限），从而做出分类。决策边界如下：
 
@@ -130,7 +130,7 @@ $$
 \frac{\partial ln(1-\sigma(z))}{\partial w_i}&=\sigma(z)(1-\sigma(z))
 \end{align*}
 $$
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-09-06 20.43.44.png" alt="截屏2020-09-06 20.43.44" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-09-06 20.43.44.png" alt="截屏2020-09-06 20.43.44" style="zoom:50%;" />
 
 实际代入后发现，对于$w$的更新过程，当预测值$f$与真实值$\hat{y}$差别越大时，求导出来的结果也越“大”，使得更新更加明显，这符合我们对于梯度下降的一般直觉。
 
@@ -142,11 +142,11 @@ $$
 
 实际上这和逻辑回归的问题背景有极大相关。我们来看使用平方损失函数的结果：
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-09-06 20.53.03.png" alt="截屏2020-09-06 20.53.03" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-09-06 20.53.03.png" alt="截屏2020-09-06 20.53.03" style="zoom:50%;" />
 
 因为分类问题的真实值固定为0或1。当取值为1时有预测值靠近0或1两种情况（sigmoid函数会让取值压缩到这两个值附近），此时他们的梯度都趋于0，从而无法做到有效的更新。对于取值0也有同样的结论。
 
-<img src="/Users/LightningX/Library/Application Support/typora-user-images/截屏2020-09-06 20.55.10.png" alt="截屏2020-09-06 20.55.10" style="zoom:33%;" />
+<img src="/Users/LightningX/Library/Application Support/typora-user-images/截屏2020-09-06 20.55.10.png" alt="截屏2020-09-06 20.55.10" style="zoom:50%;" />
 
 以一张图来表示，当使用平方损失函数的时候，在广大区域的梯度其实是很平的，无法做到快速的收敛。
 
