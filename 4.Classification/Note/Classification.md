@@ -6,13 +6,13 @@
 
 首先对于分类任务，很容易将其与回归任务联系起来。以二分类为例，对于某值空间的数据，将其划分为两个区域，指定为不同的类别，就算完成了我们的分类，以数学形式表达，就是寻找一个超平面$w^Tx+b=0$使得划分成立。然而，该方法在面对极端数据会出现不恰当的分类边界：
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.00.35.png" alt="截屏2020-08-30 14.00.35" style="zoom:14%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.00.35.png" alt="截屏2020-08-30 14.00.35" style="zoom:20%;" />
 
 如图，当某些数据过于明显可分，决策边界为了减少Loss，会向着这些数据偏移，但明眼人都知道这种边界毫无意义。所以实际上使用回归任务的方式做分类就会涉及到损失函数定义不同带来的影响（回归衡量的是每个数据点到决策界的差值，数据距离越远，差值越大）。所以需要考虑设计某种函数，超过一个阈值后就给出确定的分类，或用类似的方法，以压缩Loss的影响。
 
 ### 生成模型与贝叶斯思想
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.06.59.png" alt="截屏2020-08-30 14.06.59" style="zoom:14%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.06.59.png" alt="截屏2020-08-30 14.06.59" style="zoom:20%;" />
 
 考虑如上图的两个盒子。我们知道选取每个盒子（类）的概率与在每个盒子里头抽取出不同颜色球的概率。前者被称为先验概率Prior，后者被称为似然概率Likelihood。在此基础上，通过贝叶斯定理，我们在面对一个新的球时候，就可以利用这些概率，计算抽出的这个球应该来自于哪个箱子，所求的内容称为后验概率Posterior。
 
@@ -20,7 +20,7 @@
 
 ### Case study: Pokemon分类预测
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.27.18.png" alt="截屏2020-08-30 14.27.18" style="zoom:14%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.27.18.png" alt="截屏2020-08-30 14.27.18" style="zoom:20%;" />
 
 还是Pokemon的预测问题。只是这次预测的目标是给定某只的防御和特防向量，给出一个分类概率，进而确定分类。在本设定中，假设数据是服从高斯分布的，那么接下来的任务就是确定这群数据的一个代表高斯分布，从而计算出新数据的出现概率。
 
@@ -32,7 +32,7 @@
 
 同样的方法可以对普通系神奇宝贝做一个计算，最终对于两个不同的类，得到两组不同的$\mu$与$\Sigma$。利用刚才提到的后验概率公式，对于一个输入向量$x$，能够计算出其属于不同类的概率（二分类里头以0.5作为分类界限），从而做出分类。决策边界如下：
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.41.39.png" alt="截屏2020-08-30 14.41.39" style="zoom:14%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.41.39.png" alt="截屏2020-08-30 14.41.39" style="zoom:20%;" />
 
 不难看到，使用这两个特征的情况下效果并不好。为了提高效果，使用所有7个特征，准确率也不过在一半上下，这是没有意义的。
 
@@ -42,7 +42,7 @@
 
 通过这一简单改进，模型的效果居然发生翻天覆地的变化：
 
-<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.49.12.png" alt="截屏2020-08-30 14.49.12" style="zoom:14%;" />
+<img src="/Users/LightningX/Learning/ML2020/4.Classification/Note/截屏2020-08-30 14.49.12.png" alt="截屏2020-08-30 14.49.12" style="zoom:20%;" />
 
 使用两个特征时候，模型的决策边界形状发生了变化。使用全部七个特征的模型准确率大大提高了。
 

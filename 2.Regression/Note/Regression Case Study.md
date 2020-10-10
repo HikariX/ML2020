@@ -42,11 +42,11 @@ $$
 
 当函数可微分时，通过梯度下降的方式寻找损失函数最小的参数。
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 16.23.08.png" alt="截屏2020-08-19 16.23.08" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 16.23.08.png" alt="截屏2020-08-19 16.23.08" style="zoom:50%;" />
 
 想象函数图像如山谷，在寻找的过程中，设定初始值，得到当前的梯度，观察梯度的方向，向其相反方向移动取值。例如梯度为负数，则有$w^1 = w^0 - \eta \frac{dL}{dw}|_{w=w^0}$。通过相反方向移动，令损失函数的值减小，从而达到我们的优化目的。此处的$\eta$是学习率。通过不断迭代，找到最终值。
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 16.22.49.png" alt="截屏2020-08-19 16.22.49" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 16.22.49.png" alt="截屏2020-08-19 16.22.49" style="zoom:50%;" />
 
 注意，当参数变多的时候，计算梯度交替但独立，即在初值点得到不同参数的微分，对于所有参数使用当前的微分值更新，再计算所有更新后参数的新微分。
 
@@ -62,7 +62,7 @@ $$
 
 若考虑$y=b+w_1 \cdot x_{cp} + w_2 \cdot x_{cp}^2$...直至含有五次方项，随着每一次更新模型，在次数较小的时候，对测试数据的误差有可能变小。因此时高次模型实际上包含低次模型的所有函数（将高次项系数设为0即可），故寻找到一个使得训练数据误差最小的函数并非难事。然而，此时加入测试数据后，误差出现了巨大变化：
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 16.56.49.png" alt="截屏2020-08-19 16.56.49" style="zoom:13%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 16.56.49.png" alt="截屏2020-08-19 16.56.49" style="zoom:20%;" />
 
 当模型复杂过头，就出现了过拟合Overfitting。
 
@@ -76,7 +76,7 @@ $$
 
 也许模型对于不同种类的Pokemon应该区别对待？
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 17.10.22.png" alt="截屏2020-08-19 17.10.22" style="zoom:13%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 17.10.22.png" alt="截屏2020-08-19 17.10.22" style="zoom:20%;" />
 
 通过设计不同的激活权重，从而在遇到不同的Pokemon时触发不同的权重计算，注意此时仍然是一种线性模型。
 
@@ -86,7 +86,7 @@ $$
 
 设置正则参数可以平衡预测误差和权重本身的比例。正则参数较小，则关注预测误差本身，反之关注权重的取值。当函数较平滑时，对噪声是不敏感的，此时的模型泛化能力更出色，然而过于平滑也会令预测值较差。
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 17.24.41.png" alt="截屏2020-08-19 17.24.41" style="zoom:13%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-19 17.24.41.png" alt="截屏2020-08-19 17.24.41" style="zoom:20%;" />
 
 ## 误差来自哪儿？
 
@@ -96,25 +96,25 @@ $$
 
 #### 打靶的例子
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.40.53.png" alt="截屏2020-08-20 10.40.53" style="zoom:40%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.40.53.png" alt="截屏2020-08-20 10.40.53" style="zoom:50%;" />
 
 考虑四种情况，是高低偏置与高低方差的组合结果，呈现为上图的四个打靶。可以看到，偏置表示的是整体数据的均值与靶心$\hat{f}$的偏离程度，而方差则是数据的离散程度。因此很显然，低偏置且低方差数据是我们所追求的。
 
 若采样多组数据，对每一组数据拟合一个模型，表现又如何？
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.45.33.png" alt="截屏2020-08-20 10.45.33" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.45.33.png" alt="截屏2020-08-20 10.45.33" style="zoom:50%;" />
 
 可以看到，简单的模型在面对繁多的采样数据时，变化的程度小得多，而复杂的模型则有可能覆盖较大的候选函数空间。极端情况如一个常函数，无论数据如何采样，它不会变化。因此，复杂的模型拥有较大的方差。
 
 方差衡量数据的变化程度，偏置则关心数据的均值落点。将多组采样形成的不同函数画出，并求均值（蓝线），与真实函数（黑线）对比，得到如下图：
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.48.01.png" alt="截屏2020-08-20 10.48.01" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.48.01.png" alt="截屏2020-08-20 10.48.01" style="zoom:50%;" />
 
 令人惊奇的是，随着模型复杂，平均后的函数均值更偏向于真实值。可以认为，这是由于简单的模型未包含我们所要的目标函数所造成的当模型越复杂，简单模型为其子集，因此它的函数空间更广，包含有目标函数的可能性越大，则经过较多采样后，偏置可以趋近于真实值了。
 
 因此，一个模型受到的误差来自偏置与方差，这二者都与模型复杂程度相关。若运气好，得到一个已经覆盖目标函数的简单模型，则它方差也较小，从而误差会小许多；否则就需要增加模型的复杂度，以更好地拟合目标数据，寻找到哪个最好的函数，同时，注意提防模型复杂性增加造成的方差加大。
 
-<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.52.24.png" alt="截屏2020-08-20 10.52.24" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/2.Regression/Note/截屏2020-08-20 10.52.24.png" alt="截屏2020-08-20 10.52.24" style="zoom:50%;" />
 
 #### 如何调节模型
 

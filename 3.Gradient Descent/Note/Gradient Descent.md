@@ -4,7 +4,7 @@
 
 ### Tip1: Tuning your learning rates
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-24 15.28.31.png" alt="截屏2020-08-24 15.28.31" style="zoom:15%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-24 15.28.31.png" alt="截屏2020-08-24 15.28.31" style="zoom:20%;" />
 
 通过画出loss随着训练epoch进行的变化图像，可以观察训练过程是否合理，如上右图。
 
@@ -28,7 +28,7 @@ $$
 
 另一种角度，我们不妨考虑一个并不为同心圆的参数面：
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 10.56.06.png" alt="截屏2020-08-25 10.56.06" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 10.56.06.png" alt="截屏2020-08-25 10.56.06" style="zoom:40%;" />
 
 首先，取样点a与c、b与d在同一等高线上。首先对于参数$w_1$，a处导数确实比b大，另一个参数$w_2$同样得到c处导数大于d处。在同一个参数空间内，导数大小可以比较，但不同的参数空间下是无法比较的。例如上图中c处导数大于a处，但实际上它离minima的投影距离更近（一般认为离minima越远的地方应该越陡峭，从而梯度大）。若不加以调整，则学习器在距离中心的取值距离相同之c处（这里的取值表示的是误差），反而会走出比a处更大的步子。联想到高数课程中曾经提到，二阶导数用来衡量一阶导数的陡峭程度，所以若引入二阶导数作为平均，就可以让不同位置的参数具有可比性。特别是在机器学习常见的高维情况下，权重参数为向量，对这一向量所有位置采用相同的学习步长（普通梯度下降）无法体现不同维度的陡峭关系。**若某个维度过于陡峭，则其下降过快，会导致其他参数的正常下降过程受到影响**。
 
@@ -36,7 +36,7 @@ $$
 
 众所周知二阶导的计算难于登天，动辄复杂度$O(N^3)$的求逆运算让这个设想不再现实。李老师对Adagrad分母形式的解释为，这是一种对于二阶导数的近似（或者说是对于所谓陡峭程度的近似，有和二阶导相同的意义，但不是一类数值）。
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 11.09.51.png" alt="截屏2020-08-25 11.09.51" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 11.09.51.png" alt="截屏2020-08-25 11.09.51" style="zoom:40%;" />
 
 通过不断采样，若一阶导数都比较平缓，则分母也不会过大，就和一阶导数陡峭的参数作出了区分，从而优化的时候比较平衡。
 
@@ -48,13 +48,13 @@ $$
 
 先前研究的梯度下降都是针对所有样本而言的，即对所有样本求损失函数，并求这个函数的梯度，再应用于所有样本的下降之上。这样做可以保证下降的方向是大部分数据的代表。另一种想法是每次需要下降的时候只选取一个样本并更新梯度，对观察全样本的方法而言，计算N次走一步，而SGD方法则计算了N次并走了N步，一般情况下虽然每一步都有可能走的不够准确，但远超前者的试探次数反而可能令其在大致相同的时间内得到更快的进步！
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 11.19.37.png" alt="截屏2020-08-25 11.19.37" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 11.19.37.png" alt="截屏2020-08-25 11.19.37" style="zoom:40%;" />
 
 ### Tip3: Feature Scaling
 
 当不同维度的数据范围拥有不同的数量级时，某维度数据的微小扰动会让输出值得到巨大的变化，表现在参数等高线图上就是这一维度的参数取值范围会被压缩：
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 11.21.52.png" alt="截屏2020-08-25 11.21.52" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 11.21.52.png" alt="截屏2020-08-25 11.21.52" style="zoom:40%;" />
 
 例如上图的$w_2$，在数据较大的时候，$w_2$的变化范围不大也能够让数据$x_2$达到与$x_1$相同的变化效果，这样一来等高线图表现为椭圆。从初始点开始优化的时候，优化过程实际上是向着等高线的切线方向行进，那么不均匀的等高线会让优化的路线变得弯曲。而图右相类似数量级的数据，其参数等高线形状更加规则，每次优化也就越能够向着中心，从而收敛速度更快。
 
@@ -80,13 +80,13 @@ h(x,y) \approx h(x_0,y_0)+\frac{\partial h(x_0,y_0)}{\partial x}(x-x_0)+\frac{\p
 $$
 运用到损失函数上，可以得到如下算式：
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 14.50.48.png" alt="截屏2020-08-25 14.50.48" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 14.50.48.png" alt="截屏2020-08-25 14.50.48" style="zoom:40%;" />
 
 该图为一种直观解释，梯度下降的搜索过程可以想象为在红点处向圆圈（邻域）内搜索一个使得函数值下降最多的点并向前迈进一步。当红圈足够小的时候，就产生了泰勒展开。
 
 不难发现，此时的损失函数L对于$s$、$u$、$v$都是常量，而$a$与$b$作为搜索的起始点，也是常量，将损失函数等式后半部分看作向量$(u,v)$与$(\Delta \theta_1,\Delta \theta_2)$的内积，则令其最小者一定是与$(u,v)$相反方向的向量。所以首先从方向上可以确定。其次，在数量上，这两个向量相差某个系数$\eta$，而这个系数就是训练中调节的学习率。当学习率趋于无穷小时，邻域范围足够小，泰勒展开的近似等式才成立。因此在训练的过程中会通过不断调小学习率，迭代逼近一个正确的解析解（假如有的话）。
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 14.56.05.png" alt="截屏2020-08-25 14.56.05" style="zoom:25%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-25 14.56.05.png" alt="截屏2020-08-25 14.56.05" style="zoom:40%;" />
 
 ### 方向导数解释
 
@@ -98,25 +98,25 @@ $$
 
 在某些情况下，优化可能会走到鞍点或局部最小，若按照先前的走法，则很有可能停滞于此。若引入生活中的常识，一个小球滚下来的时候是不会轻易的停在平地或浅坑之中的，这也就是提出动量背后的物理意义：通过对先前行走趋势的加权，来推动下一步的行走。
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.28.43.png" alt="截屏2020-08-29 16.28.43" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.28.43.png" alt="截屏2020-08-29 16.28.43" style="zoom:40%;" />
 
 实际上这里的动量是对过去梯度的指数加权平均。所以该方法不仅考虑了过去的梯度，并且随着时间推移会令越早的梯度权重下降越多，从而避免开头较陡峭时的梯度一直影响。
 
 回到Adagrad，该方法使用过去的梯度来规范当前的行为，这实际上就涉及到初始下降时梯度过大，后面的行走步骤将被全部限制。因此Hinton在该方法上使用指数加权平均，提出RMSProp。
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.33.23.png" alt="截屏2020-08-29 16.33.23" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.33.23.png" alt="截屏2020-08-29 16.33.23" style="zoom:40%;" />
 
 通过此约束，同样可以减弱时间间隔较远的梯度对当前优化步长的影响。
 
 Momentum方法避免优化器陷入saddle point与local minima，而Adagrad-style的方法使优化器在训练后期能够逐渐走小步，那么将这二者结合就得到了著名的Adam优化器：
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.34.41.png" alt="截屏2020-08-29 16.34.41" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.34.41.png" alt="截屏2020-08-29 16.34.41" style="zoom:40%;" />
 
 ### 不同方法的优劣
 
 在实验中，人们发现，Adam方法能较快达到训练收敛与得到较高的准确率，而SGDM方法在训练集上弱，却在测试集上更佳，一种直觉解释为，前者倾向于找到一个更陡峭的Minimum：
 
-<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.38.57.png" alt="截屏2020-08-29 16.38.57" style="zoom:33%;" />
+<img src="/Users/LightningX/Learning/ML2020/3.Gradient Descent/Note/截屏2020-08-29 16.38.57.png" alt="截屏2020-08-29 16.38.57" style="zoom:40%;" />
 
 如图，同样两个Minimum，若测试集与训练集的偏移固定，那么平坦的minima更容易被模型generalize到。所以有人怀疑SGDM找的是更平坦的那个minima，而Adam训练极快且找到的是更陡峭的minima，从而使得其训练与测试的差距较大。
 
