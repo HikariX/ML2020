@@ -1,4 +1,4 @@
-# Deep Learning
+
 
 ## Brief Introduction
 
@@ -96,3 +96,84 @@
 
 将前向过程和后向过程所求结果相乘，即可得到我们所需的损失函数对参数的梯度。
 
+## Tips
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.06.02.png" alt="截屏2020-12-03 11.06.02" style="zoom:25%;" />
+
+一般的深度学习流程如上图示，一般将认为数据表现不佳是模型、损失函数的问题，但实际上经过研究发现，单纯增加网络层数目并不会让模型表现更佳。
+
+### Vanishing Gradient Problem
+
+多层网络中，末层通过直接的反向传播，能够感知到梯度的变化，从而很快地进行学习，但前几层网络会因为传回的梯度太小而停留在一种原始未训练的状态。
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.08.57.png" alt="截屏2020-12-03 11.08.57" style="zoom:25%;" />
+
+使用Sigmoid函数的情况下，当输入的变化很大时，输出的变化会非常小，多层网络叠加使得变化不断衰减，从而对损失函数的影响很小，最后对gradient的贡献就小了。
+
+#### ReLU
+
+一种解决方式是对激活函数的改进，比如大家最常用的ReLU，具有计算快速、无梯度消失的优点，并且其实际上是许多bias不一样的sigmoid函数叠加。
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.15.26.png" alt="截屏2020-12-03 11.15.26" style="zoom:25%;" />
+
+通过max(0,z)的函数，输出为0的单元在网络中可以直接去除，从而网络剩下一个更简单的线性网络，这样的网络不会压缩梯度。但实际上因为函数值作较大改动的时候网络仍然是一堆“折线段”拼起来的，所以还是一个非线性网络。ReLU还有Leakey ReLU或带参数的版本。
+
+#### Maxout
+
+同时，如果想让激活函数也可被学习，我们就得到了Maxout函数：
+
+
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.16.06.png" alt="截屏2020-12-03 11.16.06" style="zoom:25%;" />
+
+通过将一组里头的最大值输出，我们就得到了几个函数的组合。Maxout的一种特殊例就是线性函数和0的组合，即ReLU。
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.24.02.png" alt="截屏2020-12-03 11.24.02" style="zoom:25%;" />
+
+越来越多的函数在一组内合并，实际上是求取它们的驻点上确界，是一个片段线性的组合凸函数。
+
+### Early Stopping
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.28.37.png" alt="截屏2020-12-03 11.28.37" style="zoom:25%;" />
+
+训练中有可能在某个阶段对Validation set的结果已经达到了最佳，继续训练会产生过拟合，所以要提前停止。
+
+### Regularization
+
+对于函数$L(\theta)$，如果加入L2正则项，表示为$L(\theta)+\frac{\lambda}{2}||\theta||_2$，其梯度为$\frac{\partial L}{\partial w}+\lambda w$，对于更新过程有：
+$$
+\begin{align*}
+w^{t+1} &=w^t-\eta(\frac{\partial L}{\partial w} + \lambda w^t)
+\\
+&=(1-\eta\lambda)w^t-\eta\frac{\partial L}{\partial w}
+\end{align*}
+$$
+其中$(1-\eta\lambda)w^t$的系数实际上是一个接近1的数字，所以不会真的让参数变小太多。但因为它仍然具有这个作用，所以被称作“Weight decay”。
+
+对于L1正则项$L(\theta)+\frac{\lambda}{2}||\theta||_1$，梯度为$\frac{\partial L}{\partial w}+\lambda sgn(w)$，更新过程为：
+$$
+\begin{align*}
+w^{t+1} &=w^t-\eta(\frac{\partial L}{\partial w} + \lambda sgn(w^t))
+\\
+&=w^t-\eta\frac{\partial L}{\partial w}-\eta\lambda sgn(w^t)
+\end{align*}
+$$
+通过L1正则项的训练，每次下降的时候，都额外下降一个固定的值（或上升），而非L2的大值下降更快，所以L1正则化的训练仍然保留较大的权重，对小权重则正常减小，从而产生比较稀疏的结果（0附近的结果多）。
+
+### Dropout
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.43.23.png" alt="截屏2020-12-03 11.43.23" style="zoom:25%;" />
+
+如果在训练时，对网络里头的神经元做采样，从而将p%的神经元丢弃，那么我们的网络实际上会变成一个细长的样子。但我们在每次更新参数的时候都会重新做一次随机采样，所以网络的结果将不断变化！但注意，对于测试结果，需要用上所有神经元，并且乘上权重的系数。
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.45.17.png" alt="截屏2020-12-03 11.45.17" style="zoom:25%;" />
+
+一种直观的解释是，因为这次训练的时候失去了部分神经元，所以留下来的神经元就需要做到更多结果，所以大家互相变强。
+
+最后使用的时候因为所有权重都用到，所以输出的结果是有倍数的，所以需要乘上系数。
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.47.22.png" alt="截屏2020-12-03 11.47.22" style="zoom:25%;" />
+
+从另一个角度来看，Dropout实际上是增加网络的鲁棒性，它的本质就是一种集成模型的学习。所有结果通过乘上系数进行组合，相当于对所有结果投票平均，只要大部分模型的判定正确，结果的判定就能正确。
+
+<img src="/Users/LightningX/Learning/ML2020/5.DL/Note/截屏2020-12-03 11.48.53.png" alt="截屏2020-12-03 11.48.53" style="zoom:25%;" />
